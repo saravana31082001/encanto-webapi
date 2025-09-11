@@ -1,0 +1,102 @@
+# ---- Core build artifacts ----
+bin/
+obj/
+[Bb]uild/
+[Ll]ogs/
+
+# ---- IDE / Tools ----
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# VS Code
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+# ---- Packages / Dependencies ----
+*.nupkg
+*.snupkg
+packages/
+**/packages/*
+# NuGet v3 store
+~/.nuget/packages/
+
+# ---- Build results ----
+*.exe
+*.dll
+*.pdb
+*.mdb
+*.appx
+*.appxbundle
+*.msi
+*.msix
+*.msm
+*.msp
+*.log
+
+# ---- Publish output ----
+[Pp]ublish/*
+**/wwwroot/dist/
+
+# ---- Coverage / Reports ----
+coverage/
+*.coverage
+*.coveragexml
+TestResults/
+*.trx
+
+# ---- Temporary / Cache ----
+*.tmp
+*.temp
+*.cache
+*.bak
+*.old
+
+# ---- OS / Misc ----
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ---- Resharper / Tooling ----
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# ---- Style / Analyzers ----
+*.sarif
+
+# ---- Secrets / Config ----
+# Keep base appsettings.json (no secrets) tracked; ignore environment specific overrides
+appsettings.*.json
+!appsettings.json
+# If you introduce user secrets file outside standard location
+secrets.json
+
+# ---- Mongo / Data dumps ----
+*.bson
+*.json.dump
+/data/
+
+# ---- Build props local overrides ----
+Directory.Build.props.local
+Directory.Build.targets.local
+
+# ---- Rider / Visual Studio caches ----
+.nuget.props.cache
+.nuget.g.props
+.nuget.dgspec.json
+
+# ---- Other ----
+*.swp
+*.orig
+
