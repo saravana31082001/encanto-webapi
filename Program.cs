@@ -10,23 +10,23 @@ builder.Services.AddControllers();
 
 #region remove or comment when uploading to github
 
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy("AllowLocalhost",
-//        policy =>
-//        {
-//            policy.SetIsOriginAllowed(origin =>
-//            {
-//                if (origin == null) return false;
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost",
+        policy =>
+        {
+            policy.SetIsOriginAllowed(origin =>
+            {
+                if (origin == null) return false;
 
-//                var uri = new Uri(origin);
-//                return uri.Host == "localhost" || uri.Host == "127.0.0.1"; // allows ANY port on localhost/127.0.0.1
-//            })
-//            .AllowAnyHeader()
-//            .AllowAnyMethod()
-//            .AllowCredentials(); // only if you need cookies/auth
-//        });
-//});
+                var uri = new Uri(origin);
+                return uri.Host == "localhost";// || uri.Host == "127.0.0.1"; // allows ANY port on localhost/127.0.0.1
+            })
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials(); // only if you need cookies/auth
+        });
+});
 
 #endregion
 
@@ -45,7 +45,7 @@ app.UseHttpsRedirection();
 
 #region remove / comment when uploading to github
 
-//app.UseCors("AllowLocalhost"); // Enables CORS (before authorization & controllers)
+app.UseCors("AllowLocalhost"); // Enables CORS (before authorization & controllers)
 
 #endregion
 
