@@ -27,7 +27,7 @@ namespace EncantoWebAPI.Middlewares
         {
             // Skip validation for login/signup/logout/dbConnectionTest
             var path = context.Request.Path.Value?.ToLower();
-            if (path != null && (path.Contains("/auth/login") || path.Contains("/auth/signup") || path.Contains("/auth/logout") || path.Contains("/test-db-connection") ))
+            if (path != null && (path.Contains("/auth/login") || path.Contains("/auth/signup") || path.Contains("/auth/logout") || path.Contains("/test-db-connection") || path.Contains("/swagger") ))
             {
                 await _next(context);
                 return;
