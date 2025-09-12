@@ -37,14 +37,11 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// Enable Swagger in ALL environments (not just Development)
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
-
 
 #region remove / comment when uploading to github
 
@@ -64,5 +61,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-//Meenakshi
