@@ -8,27 +8,21 @@ string sessionsCollectionName = builder.Configuration["MongoDBSettings:SessionsC
 // Add services to the container.
 builder.Services.AddControllers();
 
-#region remove or comment when uploading to github
-
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowLocalhost",
+    options.AddPolicy("AllowFrontend",
         policy =>
         {
-            policy.SetIsOriginAllowed(origin =>
-            {
-                if (origin == null) return false;
-
-                var uri = new Uri(origin);
-                return uri.Host == "localhost";// || uri.Host == "127.0.0.1"; // allows ANY port on localhost/127.0.0.1
-            })
+            policy.WithOrigins(
+                "http://localhost:5173", // local dev
+                "https://encanto-webapp.azurewebsites.net" // deployed frontend
+            )
             .AllowAnyHeader()
             .AllowAnyMethod()
-            .AllowCredentials(); // only if you need cookies/auth
+            .AllowCredentials();
         });
 });
 
-#endregion
 
 // Add Swagger/OpenAPI services
 builder.Services.AddEndpointsApiExplorer();
@@ -43,11 +37,7 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
-#region remove / comment when uploading to github
-
-app.UseCors("AllowLocalhost"); // Enables CORS (before authorization & controllers)
-
-#endregion
+app.UseCors("AllowFrontend"); // Enables CORS (before authorization & controllers)
 
 // Adds session validation middleware BEFORE controllers
 app.UseMiddleware<EncantoWebAPI.Middlewares.SessionValidationMiddleware>(
