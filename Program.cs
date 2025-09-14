@@ -15,7 +15,7 @@ builder.Services.AddCors(options =>
         {
             policy.WithOrigins(
                 "http://localhost:5173", // local dev
-                "https://encanto-webapp.azurewebsites.net" // deployed frontend
+                "https://red-mushroom-0c80b7710.1.azurestaticapps.net" // deployed frontend
             )
             .AllowAnyHeader()
             .AllowAnyMethod()
