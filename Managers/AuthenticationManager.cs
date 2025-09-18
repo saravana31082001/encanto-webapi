@@ -39,8 +39,8 @@ namespace EncantoWebAPI.Managers
             UserProfile userProfile = new()
             {
                 UserId = userId,
-                Email = signupRequest.Email,
-                Name = signupRequest.Name,
+                Email = signupRequest.Email.ToLower(),
+                Name = GetValidName(signupRequest.Name), // Capitalize first letter of each word
                 ProfileType = signupRequest.ProfileType.ToLower(),
                 BackgroundColour = Background,
                 ForegroundColour = Foreground,
@@ -76,6 +76,17 @@ namespace EncantoWebAPI.Managers
             string slicedMail = email.Split('@')[0].ToLower();
             slicedMail = Regex.Replace(slicedMail, @"[^0-9a-z]", "");
             return $"{profileType}_{createdTimestamp}_{slicedMail}";
+        }
+
+        public static string GetValidName(string name)
+        {
+            string validName = string.Join(" ",
+                name.Trim()
+                .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                .Select(word => char.ToUpper(word[0]) + word.Substring(1).ToLower())
+            );
+
+            return validName;
         }
 
         public static (string Background, string Foreground) GetColorForString(string input)
