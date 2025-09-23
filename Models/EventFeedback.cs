@@ -6,7 +6,7 @@
         public required bool EnableRating { get; set; }
         public required bool EnableComments { get; set; }
         public int TotalRaings { get; set; } // Total number of ratings received
-        public float? Rating { get; set; } // Average rating
+        public float? Rating { get; set; } // Average ratings 1
         public List<Comments>? Comments { get; set; }
     }
 
