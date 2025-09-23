@@ -5,6 +5,10 @@
         public required string EventId { get; set; }
         public required string Title { get; set; }
         public required string Description { get; set; }
+        public List<string>? Tags { get; set; }
+        public string? MeetingLink { get; set; }
+        public int SendLinkNotificationAt { get; set; } //1-> send meet link at a physical push of a button , 2->send meeting link when Is_accepting_participants is turned off, 3-> send when user Applies/isApproved for the event
+        public EventFeedback? EventFeedback { get; set; }
         public required OrganizerDetails OrganizerDetails { get; set; }
         public required long StartTimestamp { get; set; }
         public required long EndTimestamp { get; set; }
