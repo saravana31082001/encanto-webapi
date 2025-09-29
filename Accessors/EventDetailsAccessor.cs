@@ -12,9 +12,10 @@ namespace EncantoWebAPI.Accessors
             _db = new MongoDBAccessor();
         }
 
-        public async Task CreateNewEvent(EventDetails newEvent)
+        public async Task CreateNewEvent(EventDetails newEvent, EventFeedback newEventFeedback)
         {
             await _db.Events.InsertOneAsync(newEvent);
+            await _db.EventFeedbacks.InsertOneAsync(newEventFeedback);
         }
 
         public async Task<List<EventDetails>> GetAllUpcomingEvents()
@@ -27,7 +28,6 @@ namespace EncantoWebAPI.Accessors
 
             return activeEvents;
         }
-
 
         public async Task<EventFeedback> GetFeedbacksByEventId(string eventId)
         {
