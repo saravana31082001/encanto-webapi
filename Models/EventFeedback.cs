@@ -1,13 +1,19 @@
-﻿namespace EncantoWebAPI.Models
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
+namespace EncantoWebAPI.Models
 {
     public class EventFeedback
     {
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)] //Depticts primary key in DB
+        public ObjectId Id { get; set; }  // MongoDB’s internal primary key
         public required string EventId { get; set; }
         public required bool EnableRating { get; set; }
         public required bool EnableComments { get; set; }
-        public int TotalRatings { get; set; } // Total number of ratings received
+        public required int TotalRatings { get; set; } // Total number of ratings received
         public List<Ratings>? ParticipantRatings {  get; set; }
-        public required float AverageRating { get; set; } // Average ratings
+        public float? AverageRating { get; set; } // Average ratings
         public List<Comments>? Comments { get; set; }
     }
 

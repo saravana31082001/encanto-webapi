@@ -10,8 +10,7 @@
         public required string LoginCredentialsCollectionName { get; set; }
         public required string SessionsCollectionName { get; set; }
         public required string EventsCollectionName { get; set; }
+        public required string FeedbacksCollectionName { get; set; }
 
     }
 }
-
-//public required string EventsCollectionName { get; set; }
