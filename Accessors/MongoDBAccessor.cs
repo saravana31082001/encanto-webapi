@@ -42,6 +42,8 @@ namespace EncantoWebAPI.Accessors
         public IMongoCollection<SessionDetails> SessionDetails =>
             _database.GetCollection<SessionDetails>(_settings.SessionsCollectionName);
 
+        public IMongoCollection<EventFeedback> EventFeedbacks =>
+            _database.GetCollection<EventFeedback>(_settings.FeedbacksCollectionName);
 
 
         public bool TestConnection()
