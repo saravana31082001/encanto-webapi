@@ -20,7 +20,11 @@ namespace EncantoWebAPI.Accessors
 
         public async Task<List<EventDetails>> GetAllUpcomingEvents()
         {
-            var filter = Builders<EventDetails>.Filter.Eq(e => e.Active, 1);
+            var currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
+            var filter = Builders<EventDetails>.Filter.And(
+                Builders<EventDetails>.Filter.Eq(e => e.Active, 1),
+                Builders<EventDetails>.Filter.Gt(e => e.StartTimestamp, currentTimestamp));
 
             var activeEvents = await _db.Events
                 .Find(filter)
