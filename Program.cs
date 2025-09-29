@@ -10,18 +10,19 @@ builder.Services.AddControllers();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend",
-        policy =>
-        {
-            policy.WithOrigins(
-                "http://localhost:5173", // local dev
-                "https://red-mushroom-0c80b7710.1.azurestaticapps.net" // deployed frontend
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy
+            .SetIsOriginAllowed(origin =>
+                new Uri(origin).Host == "localhost" || new Uri(origin).Host == "127.0.0.1"
             )
+            .WithOrigins("https://red-mushroom-0c80b7710.1.azurestaticapps.net") // deployed frontend
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
-        });
+    });
 });
+
 
 
 // Add Swagger/OpenAPI services
