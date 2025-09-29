@@ -8,21 +8,6 @@ string sessionsCollectionName = builder.Configuration["MongoDBSettings:SessionsC
 // Add services to the container.
 builder.Services.AddControllers();
 
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy("AllowFrontend",
-//        policy =>
-//        {
-//            policy.WithOrigins(
-//                "http://localhost:5173", // local dev
-//                "https://red-mushroom-0c80b7710.1.azurestaticapps.net" // deployed frontend
-//            )
-//            .AllowAnyHeader()
-//            .AllowAnyMethod()
-//            .AllowCredentials();
-//        });
-//});
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
