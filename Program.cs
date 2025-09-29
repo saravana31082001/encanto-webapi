@@ -8,19 +8,37 @@ string sessionsCollectionName = builder.Configuration["MongoDBSettings:SessionsC
 // Add services to the container.
 builder.Services.AddControllers();
 
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("AllowFrontend",
+//        policy =>
+//        {
+//            policy.WithOrigins(
+//                "http://localhost:5173", // local dev
+//                "https://red-mushroom-0c80b7710.1.azurestaticapps.net" // deployed frontend
+//            )
+//            .AllowAnyHeader()
+//            .AllowAnyMethod()
+//            .AllowCredentials();
+//        });
+//});
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend",
-        policy =>
-        {
-            policy.WithOrigins(
-                "http://localhost:5173", // local dev
-                "https://red-mushroom-0c80b7710.1.azurestaticapps.net" // deployed frontend
-            )
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy
+            .SetIsOriginAllowed(origin =>
+            {
+                var uri = new Uri(origin);
+                return uri.Host == "localhost"
+                       || uri.Host == "127.0.0.1"
+                       || origin == "https://red-mushroom-0c80b7710.1.azurestaticapps.net";
+            })
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
-        });
+    });
 });
 
 
