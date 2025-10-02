@@ -13,7 +13,7 @@ namespace EncantoWebAPI.Managers
             return events;
         }
 
-        public async Task CreateNewEvent(CreateEventRequest newEventRequest)
+        public async Task<EventDetails> CreateNewEvent(CreateEventRequest newEventRequest)
         {
             var eventId = GenerateEventId(newEventRequest);
 
@@ -62,6 +62,8 @@ namespace EncantoWebAPI.Managers
 
             var eventDetailsAccessor = new EventDetailsAccessor();
             await eventDetailsAccessor.CreateNewEvent(newEvent, eventFeedback);
+
+            return newEvent;
         }
 
         public static string GenerateEventId(CreateEventRequest newEventRequest)

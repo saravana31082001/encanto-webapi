@@ -1,6 +1,9 @@
-﻿using EncantoWebAPI.Models;
+﻿using EncantoWebAPI.Hubs;
+using EncantoWebAPI.Models;
+using EncantoWebAPI.Models.Notifications;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace EncantoWebAPI.Controllers
 {
@@ -8,13 +11,29 @@ namespace EncantoWebAPI.Controllers
     [ApiController]
     public class EventDetailsController : ControllerBase
     {
+        private readonly IHubContext<NotificationHub> _hubContext;
+
+        public EventDetailsController(IHubContext<NotificationHub> hubContext)
+        {
+            _hubContext = hubContext;
+        }
+
         [HttpPost("events/new")]
         public async Task<ActionResult> CreateNewEvent(CreateEventRequest newEventRequest)
         {
             var eventDetailsManager = new Managers.EventDetailsManager();
             try
             {
-                await eventDetailsManager.CreateNewEvent(newEventRequest);
+                var createdEvent = await eventDetailsManager.CreateNewEvent(newEventRequest);
+
+                var broadcastMessage = new EventUpdateMessage
+                {
+                    Action = "create",
+                    Event = createdEvent
+                };
+
+                await _hubContext.Clients.All.SendAsync("EventChanged", broadcastMessage);
+
                 return Ok("Event created successfully.");
             }
             catch (Exception ex)
