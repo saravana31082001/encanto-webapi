@@ -1,3 +1,5 @@
+using EncantoWebAPI.Hubs;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Read from appsettings.json
@@ -7,6 +9,9 @@ string sessionsCollectionName = builder.Configuration["MongoDBSettings:SessionsC
 
 // Add services to the container.
 builder.Services.AddControllers();
+
+// Add SignalR service
+builder.Services.AddSignalR();
 
 builder.Services.AddCors(options =>
 {
@@ -52,6 +57,8 @@ app.UseMiddleware<EncantoWebAPI.Middlewares.SessionValidationMiddleware>(
 
 app.UseAuthorization();
 
+// Map both Controllers and your Hub endpoint
 app.MapControllers();
+app.MapHub<NotificationHub>("/notificationHub"); // socket endpoint
 
 app.Run();
