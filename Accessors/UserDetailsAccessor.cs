@@ -40,7 +40,7 @@ namespace EncantoWebAPI.Accessors
                 throw new Exception("User not found or name not updated.");
         }
 
-        // ✅ Update Phone Number
+        
         public async Task UpdateProfilePhn(UserPhnUpdateRequest userPhnUpdateRequest)
         {
             var collection = _db.GetCollection<UserProfile>("UserProfiles");
@@ -56,7 +56,6 @@ namespace EncantoWebAPI.Accessors
                 throw new Exception("User not found or phone number not updated.");
         }
 
-        // ✅ Update Gender
         public async Task UpdateProfileGender(UserGenderUpdateRequest userGenderUpdateRequest)
         {
             var collection = _db.GetCollection<UserProfile>("UserProfiles");
