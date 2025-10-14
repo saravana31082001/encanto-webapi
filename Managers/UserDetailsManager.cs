@@ -30,6 +30,23 @@ namespace EncantoWebAPI.Managers
             }
             return sessionDetails.UserId;
         }
+        public async Task UpdateProfileName(UserNameUPRequest userNameUPRequest)
+        {
+            var userDetailsAccessor = new UserDetailsAccessor();
+            await userDetailsAccessor.UpdateProfileName(userNameUPRequest);
+        }
+
+        public async Task UpdateProfilePhn(UserPhnUpdateRequest userPhnUpdateRequest)
+        {
+            var userDetailsAccessor = new UserDetailsAccessor();
+            await userDetailsAccessor.UpdateProfilePhn(userPhnUpdateRequest);
+        }
+
+        public async Task UpdateProfileGender(UserGenderUpdateRequest userGenderUpdateRequest)
+        {
+            var userDetailsAccessor = new UserDetailsAccessor();
+            await userDetailsAccessor.UpdateProfileGender(userGenderUpdateRequest);
+        }
 
     }
 }

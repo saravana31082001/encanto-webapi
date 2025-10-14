@@ -25,6 +25,53 @@ namespace EncantoWebAPI.Accessors
             var session = await _db.SessionDetails.Find(filter).FirstOrDefaultAsync();
             return session;
         }
+        public async Task UpdateProfileName(UserNameUPRequest userNameUPRequest)
+        {
+            var collection = _db.GetCollection<UserProfile>("UserProfiles");
+
+            var filter = Builders<UserProfile>.Filter.Eq(u => u.UserId, userNameUPRequest.UserId);
+            var update = Builders<UserProfile>.Update
+                .Set(u => u.Name, userNameUPRequest.Name)
+                .Set(u => u.UpdatedTimestamp, userNameUPRequest.UpdatedTimestamp);
+
+            var result = await collection.UpdateOneAsync(filter, update);
+
+            if (result.ModifiedCount == 0)
+                throw new Exception("User not found or name not updated.");
+        }
+
+        // ✅ Update Phone Number
+        public async Task UpdateProfilePhn(UserPhnUpdateRequest userPhnUpdateRequest)
+        {
+            var collection = _db.GetCollection<UserProfile>("UserProfiles");
+
+            var filter = Builders<UserProfile>.Filter.Eq(u => u.UserId, userPhnUpdateRequest.UserId);
+            var update = Builders<UserProfile>.Update
+                .Set(u => u.PhoneNumber, userPhnUpdateRequest.PhoneNumber)
+                .Set(u => u.UpdatedTimestamp, userPhnUpdateRequest.UpdatedTimestamp);
+
+            var result = await collection.UpdateOneAsync(filter, update);
+
+            if (result.ModifiedCount == 0)
+                throw new Exception("User not found or phone number not updated.");
+        }
+
+        // ✅ Update Gender
+        public async Task UpdateProfileGender(UserGenderUpdateRequest userGenderUpdateRequest)
+        {
+            var collection = _db.GetCollection<UserProfile>("UserProfiles");
+
+            var filter = Builders<UserProfile>.Filter.Eq(u => u.UserId, userGenderUpdateRequest.UserId);
+            var update = Builders<UserProfile>.Update
+                .Set(u => u.Gender, userGenderUpdateRequest.Gender)
+                .Set(u => u.UpdatedTimestamp, userGenderUpdateRequest.UpdatedTimestamp);
+
+            var result = await collection.UpdateOneAsync(filter, update);
+
+            if (result.ModifiedCount == 0)
+                throw new Exception("User not found or gender not updated.");
+        }
+
 
     }
 }

@@ -37,6 +37,74 @@ namespace EncantoWebAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpPut("Update-user-name")]
+        public async Task<ActionResult> UpdateProfileName([FromBody] UserNameUPRequest userNameUPRequest)
+        {
+            var userDetailsManager = new Managers.UserDetailsManager();
+            try
+            {
+                if (userNameUPRequest != null) {
+                    await userDetailsManager.UpdateProfileName(userNameUPRequest);
+                    return Ok(userDetailsManager);
+                }
+                else
+                {
+                    return BadRequest("Invaild User name Request");
+                }
+            catch (Exception ex) {
+                return BadRequest(ex.Message);
+
+            }
+
+        }
+        [HttpPut("Update-user-Phn")]
+        public async Task<ActionResult> UpdateProfilePhn([FromBody] UserPhnUpdateRequest userPhnUpdateRequest)
+        {
+            if (userPhnUpdateRequest != null) {
+                var userDetailsManager = new Managers.UserDetailsManager();
+                try
+                {
+                    if (userPhnUpdateRequest != null)
+                    {
+                        await userDetailsManager.UpdateProfileName(userPhnUpdateRequest);
+                        return Ok();
+                    }
+                    else
+                    {
+                        return BadRequest("Invaild User Phone number Request");
+                    }
+            catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+
+                }
+
+            }
+        }
+        [HttpPut("Update-user-gender")]
+        public async Task<ActionResult> UpdateProfileGender([FromBody] UserGenderUpdateRequest userGenderUpdateRequest)
+        {
+            if (userGenderUpdateRequest != null)
+            {
+                var userDetailsManager = new Managers.UserDetailsManager();
+                try
+                {
+                    if (userGenderUpdateRequest != null)
+                    {
+                        await userDetailsManager.UpdateProfileName(userGenderUpdateRequest);
+                        return Ok();
+                    }
+                    else
+                    {
+                        return BadRequest("Invaild User gender Request");
+                    }
+            catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+
+                }
+
+            }
+        }
 
     }
-}
