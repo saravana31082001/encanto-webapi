@@ -43,7 +43,8 @@ namespace EncantoWebAPI.Controllers
             var userDetailsManager = new Managers.UserDetailsManager();
             try
             {
-                if (userNameUPRequest != null) {
+                if (userNameUPRequest != null)
+                {
                     await userDetailsManager.UpdateProfileName(userNameUPRequest);
                     return Ok(userDetailsManager);
                 }
@@ -51,7 +52,9 @@ namespace EncantoWebAPI.Controllers
                 {
                     return BadRequest("Invaild User name Request");
                 }
-            catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 return BadRequest(ex.Message);
 
             }
@@ -60,51 +63,54 @@ namespace EncantoWebAPI.Controllers
         [HttpPut("Update-user-Phn")]
         public async Task<ActionResult> UpdateProfilePhn([FromBody] UserPhnUpdateRequest userPhnUpdateRequest)
         {
-            if (userPhnUpdateRequest != null) {
-                var userDetailsManager = new Managers.UserDetailsManager();
-                try
-                {
-                    if (userPhnUpdateRequest != null)
-                    {
-                        await userDetailsManager.UpdateProfileName(userPhnUpdateRequest);
-                        return Ok();
-                    }
-                    else
-                    {
-                        return BadRequest("Invaild User Phone number Request");
-                    }
-            catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
 
+
+            var userDetailsManager = new Managers.UserDetailsManager();
+            try
+            {
+                if (userPhnUpdateRequest != null)
+                {
+                    await userDetailsManager.UpdateProfilePhn(userPhnUpdateRequest);
+                    return Ok();
                 }
+                else
+                {
+                    return BadRequest("Invaild User Phone number Request");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
 
             }
+
         }
         [HttpPut("Update-user-gender")]
         public async Task<ActionResult> UpdateProfileGender([FromBody] UserGenderUpdateRequest userGenderUpdateRequest)
         {
-            if (userGenderUpdateRequest != null)
-            {
+           
+            
                 var userDetailsManager = new Managers.UserDetailsManager();
                 try
                 {
                     if (userGenderUpdateRequest != null)
                     {
-                        await userDetailsManager.UpdateProfileName(userGenderUpdateRequest);
+                        await userDetailsManager.UpdateProfileGender(userGenderUpdateRequest);
                         return Ok();
                     }
                     else
                     {
                         return BadRequest("Invaild User gender Request");
                     }
-            catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     return BadRequest(ex.Message);
 
                 }
 
-            }
+            
         }
 
     }
+}
