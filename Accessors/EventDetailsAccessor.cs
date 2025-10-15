@@ -1,4 +1,4 @@
-﻿using EncantoWebAPI.Models;
+﻿using EncantoWebAPI.Models.Events;
 using MongoDB.Driver;
 
 namespace EncantoWebAPI.Accessors

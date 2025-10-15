@@ -1,5 +1,6 @@
 ﻿using EncantoWebAPI.Accessors;
-using EncantoWebAPI.Models;
+using EncantoWebAPI.Models.Profiles;
+using EncantoWebAPI.Models.Profiles.Requests;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -37,15 +38,16 @@ namespace EncantoWebAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPut("Update-user-name")]
-        public async Task<ActionResult> UpdateProfileName([FromBody] UserNameUPRequest userNameUPRequest)
+
+        [HttpPut("update-user-name")]
+        public async Task<ActionResult> UpdateProfileName([FromBody] UserNameUpdateRequest userNameUpdateRequest)
         {
             var userDetailsManager = new Managers.UserDetailsManager();
             try
             {
-                if (userNameUPRequest != null)
+                if (userNameUpdateRequest != null)
                 {
-                    await userDetailsManager.UpdateProfileName(userNameUPRequest);
+                    await userDetailsManager.UpdateProfileName(userNameUpdateRequest);
                     return Ok(userDetailsManager);
                 }
                 else
@@ -58,13 +60,11 @@ namespace EncantoWebAPI.Controllers
                 return BadRequest(ex.Message);
 
             }
-
         }
-        [HttpPut("Update-user-Phn")]
+
+        [HttpPut("update-user-phone")]
         public async Task<ActionResult> UpdateProfilePhn([FromBody] UserPhnUpdateRequest userPhnUpdateRequest)
         {
-
-
             var userDetailsManager = new Managers.UserDetailsManager();
             try
             {
@@ -83,33 +83,29 @@ namespace EncantoWebAPI.Controllers
                 return BadRequest(ex.Message);
 
             }
-
         }
-        [HttpPut("Update-user-gender")]
+
+        [HttpPut("update-user-gender")]
         public async Task<ActionResult> UpdateProfileGender([FromBody] UserGenderUpdateRequest userGenderUpdateRequest)
         {
-           
-            
-                var userDetailsManager = new Managers.UserDetailsManager();
-                try
+            var userDetailsManager = new Managers.UserDetailsManager();
+            try
+            {
+                if (userGenderUpdateRequest != null)
                 {
-                    if (userGenderUpdateRequest != null)
-                    {
-                        await userDetailsManager.UpdateProfileGender(userGenderUpdateRequest);
-                        return Ok();
-                    }
-                    else
-                    {
-                        return BadRequest("Invaild User gender Request");
-                    }
+                    await userDetailsManager.UpdateProfileGender(userGenderUpdateRequest);
+                    return Ok();
                 }
-                catch (Exception ex)
+                else
                 {
-                    return BadRequest(ex.Message);
-
+                    return BadRequest("Invaild User gender Request");
                 }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
 
-            
+            }
         }
 
     }

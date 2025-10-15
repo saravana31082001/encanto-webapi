@@ -1,4 +1,6 @@
-﻿namespace EncantoWebAPI.Models.Notifications
+﻿using EncantoWebAPI.Models.Events;
+
+namespace EncantoWebAPI.Models.Notifications
 {
     public class EventUpdateMessage
     {

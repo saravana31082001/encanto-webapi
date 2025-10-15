@@ -1,4 +1,4 @@
-﻿namespace EncantoWebAPI.Models
+﻿namespace EncantoWebAPI.Models.Events
 {
     public class CreateEventRequest
     {

@@ -1,5 +1,6 @@
 ﻿using EncantoWebAPI.Accessors;
-using EncantoWebAPI.Models;
+using EncantoWebAPI.Models.Profiles;
+using EncantoWebAPI.Models.Profiles.Requests;
 using System.Text.Json;
 
 namespace EncantoWebAPI.Managers
@@ -30,10 +31,11 @@ namespace EncantoWebAPI.Managers
             }
             return sessionDetails.UserId;
         }
-        public async Task UpdateProfileName(UserNameUPRequest userNameUPRequest)
+
+        public async Task UpdateProfileName(UserNameUpdateRequest userNameUpdateRequest)
         {
             var userDetailsAccessor = new UserDetailsAccessor();
-            await userDetailsAccessor.UpdateProfileName(userNameUPRequest);
+            await userDetailsAccessor.UpdateProfileName(userNameUpdateRequest);
         }
 
         public async Task UpdateProfilePhn(UserPhnUpdateRequest userPhnUpdateRequest)

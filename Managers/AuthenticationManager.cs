@@ -1,5 +1,6 @@
 ﻿using EncantoWebAPI.Accessors;
-using EncantoWebAPI.Models;
+using EncantoWebAPI.Models.Auth;
+using EncantoWebAPI.Models.Profiles;
 using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using System.Security.Cryptography;
 using System.Text;

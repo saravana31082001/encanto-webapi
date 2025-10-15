@@ -1,4 +1,4 @@
-﻿using EncantoWebAPI.Models;
+﻿using EncantoWebAPI.Models.Auth;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

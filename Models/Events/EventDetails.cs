@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace EncantoWebAPI.Models
+namespace EncantoWebAPI.Models.Events
 {
     public class EventDetails
     {

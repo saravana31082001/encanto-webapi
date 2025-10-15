@@ -1,4 +1,5 @@
-﻿using EncantoWebAPI.Models;
+﻿using EncantoWebAPI.Models.Auth;
+using EncantoWebAPI.Models.Profiles;
 using MongoDB.Driver;
 
 namespace EncantoWebAPI.Accessors

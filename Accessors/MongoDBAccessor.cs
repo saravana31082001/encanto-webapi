@@ -1,4 +1,7 @@
 ﻿using EncantoWebAPI.Models;
+using EncantoWebAPI.Models.Auth;
+using EncantoWebAPI.Models.Events;
+using EncantoWebAPI.Models.Profiles;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
