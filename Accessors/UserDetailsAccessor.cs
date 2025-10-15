@@ -1,4 +1,6 @@
-﻿using EncantoWebAPI.Models;
+﻿using EncantoWebAPI.Models.Auth;
+using EncantoWebAPI.Models.Profiles;
+using EncantoWebAPI.Models.Profiles.Requests;
 using MongoDB.Driver;
 using System.Text.Json;
 
@@ -25,26 +27,24 @@ namespace EncantoWebAPI.Accessors
             var session = await _db.SessionDetails.Find(filter).FirstOrDefaultAsync();
             return session;
         }
-        public async Task UpdateProfileName(UserNameUPRequest userNameUPRequest)
-        {
-            
 
-            var filter = Builders<UserProfile>.Filter.Eq(u => u.UserId, userNameUPRequest.UserId);
+        public async Task UpdateProfileName(UserNameUpdateRequest userNameUpdateRequest)
+        {
+            var filter = Builders<UserProfile>.Filter.Eq(u => u.UserId, userNameUpdateRequest.UserId);
             var update = Builders<UserProfile>.Update
-                .Set(u => u.Name, userNameUPRequest.Name)
-                .Set(u => u.UpdatedTimestamp, userNameUPRequest.UpdatedTimestamp);
+                .Set(u => u.Name, userNameUpdateRequest.Name)
+                .Set(u => u.UpdatedTimestamp, userNameUpdateRequest.UpdatedTimestamp);
 
             var result = await _db.Users.UpdateOneAsync(filter, update);
 
             if (result.ModifiedCount == 0)
+            {
                 throw new Exception("User not found or name not updated.");
+            }
         }
-
         
         public async Task UpdateProfilePhn(UserPhnUpdateRequest userPhnUpdateRequest)
         {
-         
-
             var filter = Builders<UserProfile>.Filter.Eq(u => u.UserId, userPhnUpdateRequest.UserId);
             var update = Builders<UserProfile>.Update
                 .Set(u => u.PhoneNumber, userPhnUpdateRequest.PhoneNumber)
@@ -53,13 +53,13 @@ namespace EncantoWebAPI.Accessors
             var result = await _db.Users.UpdateOneAsync(filter, update);
 
             if (result.ModifiedCount == 0)
+            {
                 throw new Exception("User not found or phone number not updated.");
+            }
         }
 
         public async Task UpdateProfileGender(UserGenderUpdateRequest userGenderUpdateRequest)
         {
-            
-
             var filter = Builders<UserProfile>.Filter.Eq(u => u.UserId, userGenderUpdateRequest.UserId);
             var update = Builders<UserProfile>.Update
                 .Set(u => u.Gender, userGenderUpdateRequest.Gender)
@@ -68,9 +68,9 @@ namespace EncantoWebAPI.Accessors
             var result = await _db.Users.UpdateOneAsync(filter, update);
 
             if (result.ModifiedCount == 0)
+            {
                 throw new Exception("User not found or gender not updated.");
+            }
         }
-
-
     }
 }

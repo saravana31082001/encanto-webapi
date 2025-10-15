@@ -1,4 +1,4 @@
-﻿using EncantoWebAPI.Models;
+﻿using EncantoWebAPI.Models.Auth;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;
 using System.Threading.Tasks;

@@ -1,5 +1,6 @@
 ﻿using EncantoWebAPI.Accessors;
 using EncantoWebAPI.Models;
+using EncantoWebAPI.Models.Events;
 using System.Text.RegularExpressions;
 
 namespace EncantoWebAPI.Managers

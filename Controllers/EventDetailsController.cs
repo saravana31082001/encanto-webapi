@@ -1,5 +1,5 @@
 ﻿using EncantoWebAPI.Hubs;
-using EncantoWebAPI.Models;
+using EncantoWebAPI.Models.Events;
 using EncantoWebAPI.Models.Notifications;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
