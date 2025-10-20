@@ -1,23 +1,17 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-
-namespace EncantoWebAPI.Models.Profiles
+﻿namespace EncantoWebAPI.Models.Profiles.Requests
 {
-    public class OccupationDetails
+    public class UserOccupationUpdateRequest
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public ObjectId Id { get; set; }  // MongoDB’s internal primary key
-        public required string OccupationId { get; set; }
+        public required string UserId { get; set; }
+        public string? OccupationId { get; set; }
         public string? Designation { get; set; } //"Software Engineer", "Doctor", "Tutor"
         public string? IndustryDomain { get; set; } //"IT", "Healthcare", "Finance", "Education"
         public string? OrganizationName { get; set; } //"Zoho", "Appollo Hospitals", "Aakash Coaching Center"
         public string? EmploymentType { get; set; } //"Full-Time", "Part-Time", "Self-Employed", "Freelancer"
         public string? AddressId { get; set; }
-        public Address? JobLocation { get; set; }
+        public UserAddressUpdateRequest? JobLocation { get; set; }
         public string? WorkEmail { get; set; }
         public long? WorkPhoneNumber { get; set; }
-        public required long CreatedTimestamp { get; set; }
         public required long UpdatedTimestamp { get; set; }
     }
 }

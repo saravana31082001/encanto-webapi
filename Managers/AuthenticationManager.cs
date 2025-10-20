@@ -16,9 +16,9 @@ namespace EncantoWebAPI.Managers
         public async Task CreateNewUser(SignupRequest signupRequest)
         {
             var authenticationAccessor = new AuthenticationAccessor();
-            var existingEmailsIds = await authenticationAccessor.GetAllEmailsIdsAsync();
+            var isEmailExisting = await authenticationAccessor.CheckIfEmailExists(signupRequest.Email);
 
-            if (existingEmailsIds.Contains(signupRequest.Email)) //if email already exists
+            if (isEmailExisting) //if email already exists
             {
                 throw new InvalidOperationException($"User with Mail Id '{signupRequest.Email}' already exists.");
             }

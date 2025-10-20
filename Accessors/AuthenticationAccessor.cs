@@ -48,16 +48,11 @@ namespace EncantoWebAPI.Accessors
             await _db.LoginCredentials.InsertOneAsync(newLoginCredential);
         }
 
-        public async Task<List<string>> GetAllEmailsIdsAsync()
+        public async Task<bool> CheckIfEmailExists(string emailId)
         {
-            var projection = Builders<UserProfile>.Projection.Include(u => u.Email);
-
-            var emailsIds = await _db.Users
-                .Find(FilterDefinition<UserProfile>.Empty) // no filter = fetch all
-                .Project(u => u.Email)                    // project only UserId
-                .ToListAsync();
-
-            return emailsIds;
+            var filter = Builders<UserProfile>.Filter.Eq(u => u.Email, emailId);
+            var exists = await _db.Users.Find(filter).Limit(1).AnyAsync();
+            return exists;
         }
 
         #endregion
