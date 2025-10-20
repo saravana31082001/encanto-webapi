@@ -12,7 +12,7 @@ namespace EncantoWebAPI.Models.Profiles
         public required string Name { get; set; }
         public required string Email { get; set; }
         public long? PhoneNumber { get; set; }
-        public string? DateOfBirth { get; set; } // 'yyyy-mm-dd' format
+        public string? DateOfBirth { get; set; } // 'dd-mm-yyyy' format
         public string? AddressId { get; set; }
         public Address? Address { get; set; }
         public required string ProfileType { get; set; } //"guest" or "host"

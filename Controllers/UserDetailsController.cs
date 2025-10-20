@@ -12,7 +12,7 @@ namespace EncantoWebAPI.Controllers
     public class UserDetailsController : ControllerBase
     {
 
-        [HttpGet("profileinfo")]
+        [HttpGet("profile/info")]
         public async Task<ActionResult<UserProfile>> GetProfileDetails()
         {
             var userDetailsManager = new Managers.UserDetailsManager();
@@ -39,7 +39,9 @@ namespace EncantoWebAPI.Controllers
             }
         }
 
-        [HttpPut("update-user-name")]
+        #region Update Profile Details
+
+        [HttpPut("profile/update-user-name")]
         public async Task<ActionResult> UpdateProfileName([FromBody] UserNameUpdateRequest userNameUpdateRequest)
         {
             var userDetailsManager = new Managers.UserDetailsManager();
@@ -62,7 +64,7 @@ namespace EncantoWebAPI.Controllers
             }
         }
 
-        [HttpPut("update-user-phone")]
+        [HttpPut("profile/update-user-phone-number")]
         public async Task<ActionResult> UpdateProfilePhn([FromBody] UserPhnUpdateRequest userPhnUpdateRequest)
         {
             var userDetailsManager = new Managers.UserDetailsManager();
@@ -85,7 +87,7 @@ namespace EncantoWebAPI.Controllers
             }
         }
 
-        [HttpPut("update-user-gender")]
+        [HttpPut("profile/update-user-gender")]
         public async Task<ActionResult> UpdateProfileGender([FromBody] UserGenderUpdateRequest userGenderUpdateRequest)
         {
             var userDetailsManager = new Managers.UserDetailsManager();
@@ -107,6 +109,84 @@ namespace EncantoWebAPI.Controllers
 
             }
         }
+
+        [HttpPut("profile/update-user-birthday")]
+        public async Task<ActionResult> UpdateProfileBirthday([FromBody] UserBirthdayUpdateRequest userBirthdayUpdateRequest)
+        {
+            var userDetailsManager = new Managers.UserDetailsManager();
+            try
+            {
+                if (userBirthdayUpdateRequest != null)
+                {
+                    await userDetailsManager.UpdateProfileBirthday(userBirthdayUpdateRequest);
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest("Invaild User birthday Request");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
+        }
+
+        #endregion
+
+
+        #region Update Address Details
+
+        [HttpPut("profile/update-user-address")]
+        public async Task<ActionResult> UpdateProfileAddress([FromBody] UserAddressUpdateRequest userAddressUpdateRequest)
+        {
+            var userDetailsManager = new Managers.UserDetailsManager();
+            try
+            {
+                if (userAddressUpdateRequest != null)
+                {
+                    await userDetailsManager.UpdateProfileAddress(userAddressUpdateRequest);
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest("Invaild User address Request");
+                }
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        #endregion
+
+        #region Update Occupation Details
+
+        [HttpPut("profile/update-user-occupation")]
+        public async Task<ActionResult> UpdateProfileOccupation([FromBody] UserOccupationUpdateRequest userOccupationUpdateRequest)
+        {
+            var userDetailsManager = new Managers.UserDetailsManager();
+            try
+            {
+                if (userOccupationUpdateRequest != null)
+                {
+                    await userDetailsManager.UpdateProfileOccupation(userOccupationUpdateRequest);
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest("Invaild User Occupation Request");
+                }
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        #endregion
 
     }
 }
