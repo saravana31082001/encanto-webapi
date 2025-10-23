@@ -50,7 +50,7 @@ namespace EncantoWebAPI.Controllers
                 if (userNameUpdateRequest != null)
                 {
                     await userDetailsManager.UpdateProfileName(userNameUpdateRequest);
-                    return Ok(userDetailsManager);
+                    return Ok();
                 }
                 else
                 {

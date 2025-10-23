@@ -33,6 +33,19 @@ namespace EncantoWebAPI.Managers
             return profileDetails;
         }
 
+        public async Task<UserProfile> GetProfileDetailsForEventCreationFromUserId(string UserId)
+        {
+            var userDetailsAccessor = new UserDetailsAccessor();
+            var profileDetails = await userDetailsAccessor.GetProfileDetails(UserId);
+
+            if (profileDetails == null)
+            {
+                throw new InvalidOperationException($"User profile with ID '{UserId}' not found.");
+            }
+
+            return profileDetails;
+        }
+
         public async Task<string> GetUserIdFromSessionDetails(string sessionKey)
         {
             var userDetailsAccessor = new UserDetailsAccessor();
