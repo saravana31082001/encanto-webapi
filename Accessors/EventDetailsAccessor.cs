@@ -1,4 +1,5 @@
 ﻿using EncantoWebAPI.Models.Events;
+using EncantoWebAPI.Models.Events.Requests;
 using EncantoWebAPI.Models.Profiles;
 using EncantoWebAPI.Models.Profiles.Requests;
 using Microsoft.Extensions.Hosting;
@@ -164,9 +165,12 @@ namespace EncantoWebAPI.Accessors
         {
             var currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
+            bool is_participant_acccepting_status = eventStatus == 1; // if eventStatus == 1 -> true ; else false
+
             var filter = Builders<EventDetails>.Filter.Eq(u => u.EventId, eventId);
             var update = Builders<EventDetails>.Update
                 .Set(u => u.Active, eventStatus)
+                .Set(u => u.Is_accepting_participants, is_participant_acccepting_status)
                 .Set(u => u.UpdatedTimestamp, currentTimestamp); // update timestamp
 
             var result = await _db.Events.UpdateOneAsync(filter, update);
@@ -174,6 +178,26 @@ namespace EncantoWebAPI.Accessors
             if (result.ModifiedCount == 0)
             {
                 throw new Exception("Event not found or Active Status not updated.");
+            }
+        }
+
+        public async Task UpdateEventDetails(EditEventDetailsRequest editEventDetailsRequest)
+        {
+            var filter = Builders<EventDetails>.Filter.Eq(u => u.EventId, editEventDetailsRequest.EventId);
+            var update = Builders<EventDetails>.Update
+                .Set(u => u.Title, editEventDetailsRequest.Title)
+                .Set(u => u.Description, editEventDetailsRequest.Description)
+                .Set(u => u.MeetingLink, editEventDetailsRequest.MeetingLink)
+                .Set(u => u.StartTimestamp, editEventDetailsRequest.StartTimestamp)
+                .Set(u => u.EndTimestamp, editEventDetailsRequest.EndTimestamp)
+                .Set(u => u.Is_accepting_participants, editEventDetailsRequest.Is_accepting_participants)
+                .Set(u => u.UpdatedTimestamp, editEventDetailsRequest.UpdatedTimestamp);
+
+            var result = await _db.Events.UpdateOneAsync(filter, update);
+
+            if (result.ModifiedCount == 0)
+            {
+                throw new Exception("Event not found or Event Details not updated.");
             }
         }
     }
