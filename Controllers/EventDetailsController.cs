@@ -101,7 +101,7 @@ namespace EncantoWebAPI.Controllers
         }
 
 
-        [HttpGet("events/apply")]
+        [HttpPut("events/apply")]
         public async Task<ActionResult> ApplyForUpcomingEvent([FromBody] EventApplicationRequest eventApplicationRequest)
         {
             var eventDetailsManager = new Managers.EventDetailsManager();
@@ -123,6 +123,114 @@ namespace EncantoWebAPI.Controllers
             }
         }
 
+        [HttpGet("events/get-registered")]
+        public async Task<ActionResult<List<EventDetails>>> GetMyRegisteredEvents(string guestId)
+        {
+            var eventDetailsManager = new Managers.EventDetailsManager();
+            try
+            {
+                if (guestId != null)
+                {
+                    var events = await eventDetailsManager.GetMyRegisteredEvents(guestId);
+                    return Ok(events);
+                }
+                else
+                {
+                    return BadRequest("Invaild Participant Details Request");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
+        [HttpGet("events/get-past-attended")]
+        public async Task<ActionResult<List<EventDetails>>> GetMyPastAttendedEvents(string guestId)
+        {
+            var eventDetailsManager = new Managers.EventDetailsManager();
+            try
+            {
+                if (guestId != null)
+                {
+                    var events = await eventDetailsManager.GetMyPastAttendedEvents(guestId);
+                    return Ok(events);
+                }
+                else
+                {
+                    return BadRequest("Invaild Participant Details Request");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("events/pending-requests")]
+        public async Task<ActionResult<List<PrivateEventRequestPreview>>> GetAllPendingRequests(string hostId)
+        {
+            var eventDetailsManager = new Managers.EventDetailsManager();
+            try
+            {
+                if (hostId != null)
+                {
+                    var events = await eventDetailsManager.GetAllPendingRequests(hostId);
+                    return Ok(events);
+                }
+                else
+                {
+                    return BadRequest("Invaild Participant Details Request");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("events/update-pending-request")]
+        public async Task<ActionResult> UpdateEventPendingRequest(string eventId, string participantId, bool isParticipantAccepted)
+        {
+            var eventDetailsManager = new Managers.EventDetailsManager();
+            try
+            {
+                if (eventId != null && participantId != null)
+                {
+                    await eventDetailsManager.UpdateEventPendingRequest(eventId, participantId, isParticipantAccepted);
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest("Invaild Update Pending Request");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("events/update-event-status")]
+        public async Task<ActionResult> UpdateEventActiveStatus(string eventId, int eventStatus)
+        {
+            var eventDetailsManager = new Managers.EventDetailsManager();
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(eventId))
+                {
+                    await eventDetailsManager.UpdateEventActiveStatus(eventId, eventStatus);
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest("Invaild Event Update Status Request");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
