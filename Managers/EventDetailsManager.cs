@@ -105,6 +105,11 @@ namespace EncantoWebAPI.Managers
                 int totalParticipantsCount = eventDetails.TotalRegisteredParticipants;
                 int registrationStatus;
 
+                if (!eventDetails.Is_accepting_participants)
+                {
+                    throw new InvalidOperationException("Organizer has stopped accepting participants.");
+                }
+
                 if (isParticipantAlreadyRegistered)
                 {
                     throw new InvalidOperationException("Participant Already Registered for the Event.");
@@ -245,6 +250,12 @@ namespace EncantoWebAPI.Managers
             }
 
             await eventDetailsAccessor.UpdateEventActiveStatus(eventId, eventStatus);
+        }
+
+        public async Task UpdateEventDetails(EditEventDetailsRequest editEventDetailsRequest)
+        {
+            var eventDetailsAccessor = new EventDetailsAccessor();
+            await eventDetailsAccessor.UpdateEventDetails(editEventDetailsRequest);
         }
     }
 }

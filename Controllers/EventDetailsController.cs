@@ -1,4 +1,5 @@
-﻿using EncantoWebAPI.Hubs;
+﻿using EncantoWebAPI.Accessors;
+using EncantoWebAPI.Hubs;
 using EncantoWebAPI.Managers;
 using EncantoWebAPI.Models.Events;
 using EncantoWebAPI.Models.Events.Requests;
@@ -225,6 +226,28 @@ namespace EncantoWebAPI.Controllers
                 else
                 {
                     return BadRequest("Invaild Event Update Status Request");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("events/update-event-details")]
+        public async Task<ActionResult> UpdateEventDetails(EditEventDetailsRequest editEventDetailsRequest)
+        {
+            var eventDetailsManager = new Managers.EventDetailsManager();
+            try
+            {
+                if (editEventDetailsRequest != null)
+                {
+                    await eventDetailsManager.UpdateEventDetails(editEventDetailsRequest);
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest("Invaild Event Details Update Request");
                 }
             }
             catch (Exception ex)
