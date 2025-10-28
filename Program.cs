@@ -1,4 +1,5 @@
 using EncantoWebAPI.Hubs;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
