@@ -31,11 +31,34 @@ builder.Services.AddCors(options =>
     });
 });
 
-
-
 // Add Swagger/OpenAPI services
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    // Define the security scheme for session-key header
+    options.AddSecurityDefinition("sessionKey", new OpenApiSecurityScheme
+    {
+        Description = "Enter the session key as received from /auth/login. Example: abcdef12345",
+        Name = "session-key",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "sessionKey"
+    });
+
+    // Make the session-key required for all endpoints in Swagger UI (you can override per-operation if needed)
+    var securityRequirement = new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "sessionKey" }
+            },
+            new string[] { }
+        }
+    };
+
+    options.AddSecurityRequirement(securityRequirement);
+});
 
 var app = builder.Build();
 
