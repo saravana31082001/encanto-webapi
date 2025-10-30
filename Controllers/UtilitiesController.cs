@@ -1,5 +1,4 @@
 ﻿using EncantoWebAPI.Accessors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EncantoWebAPI.Controllers
@@ -8,11 +7,13 @@ namespace EncantoWebAPI.Controllers
     [ApiController]
     public class UtilitiesController : ControllerBase
     {
+
         [HttpGet("test-db-connection")]
         public ActionResult TestDatabase()
         {
             var mongo = new MongoDBAccessor();
             return mongo.TestConnection() ? Ok("✅ Connected to MongoDB!") : StatusCode(500, "❌ MongoDB connection failed.");
         }
+
     }
 }

@@ -3,7 +3,6 @@ using EncantoWebAPI.Models.Auth;
 using EncantoWebAPI.Models.Profiles;
 using EncantoWebAPI.Models.Profiles.Requests;
 using MongoDB.Driver;
-using System.Text.Json;
 
 namespace EncantoWebAPI.Accessors
 {
@@ -14,6 +13,8 @@ namespace EncantoWebAPI.Accessors
         {
             _db = new MongoDBAccessor();
         }
+
+        #region Profile Details
 
         public async Task<UserProfile?> GetProfileDetails(string userId)
         {
@@ -73,6 +74,8 @@ namespace EncantoWebAPI.Accessors
                 throw new Exception("User not found or gender not updated.");
             }
         }
+
+        #endregion
 
         #region Address Updation
 
