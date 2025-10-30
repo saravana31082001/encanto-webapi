@@ -1,9 +1,6 @@
-﻿using EncantoWebAPI.Accessors;
-using EncantoWebAPI.Models.Profiles;
+﻿using EncantoWebAPI.Models.Profiles;
 using EncantoWebAPI.Models.Profiles.Requests;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace EncantoWebAPI.Controllers
 {

@@ -1,7 +1,5 @@
 ﻿using EncantoWebAPI.Models.Auth;
-using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;
-using System.Threading.Tasks;
 
 // This middleware pipeline intercepts incoming HTTP requests (API calls) before they reach the controllers(endpoints).
 // It checks the session-key in the request headers, validates it against the MongoDB "Sessions" collection, and ensures it hasn’t expired.

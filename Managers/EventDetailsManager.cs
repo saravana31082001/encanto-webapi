@@ -1,20 +1,14 @@
 ﻿using EncantoWebAPI.Accessors;
-using EncantoWebAPI.Models;
 using EncantoWebAPI.Models.Events;
 using EncantoWebAPI.Models.Events.Requests;
-using Microsoft.Extensions.Hosting;
 using System.Text.RegularExpressions;
 
 namespace EncantoWebAPI.Managers
 {
     public class EventDetailsManager
     {
-        public async Task<List<EventDetails>> GetAllUpcomingEvents()
-        {
-            var eventDetailsAccessor = new EventDetailsAccessor();
-            var events = await eventDetailsAccessor.GetAllUpcomingEvents();
-            return events;
-        }
+
+        #region Host Event Operations
 
         public async Task<EventDetails> CreateNewEvent(CreateEventRequest newEventRequest)
         {
@@ -33,7 +27,7 @@ namespace EncantoWebAPI.Managers
             if (!string.IsNullOrWhiteSpace(hostDetails.OccupationId))
             {
                 var hostOccupationDetails = await userDetailsAccessor.GetOccupationDetails(hostDetails.OccupationId);
-                
+
                 var designationParts = new[] { hostOccupationDetails?.Designation, hostOccupationDetails?.OrganizationName }
                 .Where(s => !string.IsNullOrWhiteSpace(s));
 
@@ -86,8 +80,99 @@ namespace EncantoWebAPI.Managers
             string eventType = newEventRequest.IsPrivate ? "Priv" : "Pub";
             string shortEventName = Regex.Replace(newEventRequest.Title, "[^a-zA-Z0-9]", ""); //remove whitespaces
             shortEventName = shortEventName.Length <= 7 ? shortEventName : shortEventName.Substring(0, 7);
-            
+
             return $"Event_{eventType}_{newEventRequest.CreatedTimestamp}_{shortEventName}";
+        }
+
+        public async Task<List<EventDetails>> GetMyUpcomingHostedEvents(string hostId)
+        {
+            var eventDetailsAccessor = new EventDetailsAccessor();
+            var events = await eventDetailsAccessor.GetMyUpcomingHostedEvents(hostId);
+            return events;
+        }
+
+        public async Task<List<EventDetails>> GetMyPastHostedEvents(string hostId)
+        {
+            var eventDetailsAccessor = new EventDetailsAccessor();
+            var events = await eventDetailsAccessor.GetMyPastHostedEvents(hostId);
+            return events;
+        }
+
+        public async Task<List<PrivateEventRequestPreview>> GetAllPendingRequests(string hostId)
+        {
+            var currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
+            var pendingRequests = new List<PrivateEventRequestPreview>();
+            var eventDetailsAccessor = new EventDetailsAccessor();
+            var events = await eventDetailsAccessor.GetMyUpcomingHostedEvents(hostId);
+
+            var upcomingEvents = events.Where(e => e.StartTimestamp > currentTimestamp);
+
+            foreach (var Event in upcomingEvents)
+            {
+                if (Event.Is_accepting_participants == true && Event.Participants != null)
+                {
+                    var pendingParticipantsInThisEvent = Event.Participants
+                        .Where(p => p.RegistrationStatus == 0);
+
+                    foreach (var participant in pendingParticipantsInThisEvent)
+                    {
+                        PrivateEventRequestPreview pendingRequest = new()
+                        {
+                            EventId = Event.EventId,
+                            EventName = Event.Title,
+                            StartTimestamp = Event.StartTimestamp,
+                            EndTimestamp = Event.EndTimestamp,
+                            ParticipantDetails = participant,
+                            ParticipantRequestTimestamp = participant.UpdatedTimestamp
+                        };
+
+                        pendingRequests.Add(pendingRequest);
+                    }
+                }
+            }
+
+            var sortedPendingRequests = pendingRequests
+                .OrderByDescending(r => r.ParticipantRequestTimestamp)
+                .ToList();
+
+            return sortedPendingRequests;
+        }
+
+        public async Task UpdateEventPendingRequest(string eventId, string participantId, bool isParticipantAccepted)
+        {
+            var eventDetailsAccessor = new EventDetailsAccessor();
+            await eventDetailsAccessor.UpdateEventPendingRequest(eventId, participantId, isParticipantAccepted);
+        }
+
+        public async Task UpdateEventActiveStatus(string eventId, int eventStatus)
+        {
+            var eventDetailsAccessor = new EventDetailsAccessor();
+            var eventDetails = await eventDetailsAccessor.GetEventDetailsFromEventId(eventId);
+
+            if (eventDetails.Active == eventStatus)
+            {
+                throw new InvalidOperationException($"Event's Active Status is already {eventStatus}");
+            }
+
+            await eventDetailsAccessor.UpdateEventActiveStatus(eventId, eventStatus);
+        }
+
+        public async Task UpdateEventDetails(EditEventDetailsRequest editEventDetailsRequest)
+        {
+            var eventDetailsAccessor = new EventDetailsAccessor();
+            await eventDetailsAccessor.UpdateEventDetails(editEventDetailsRequest);
+        }
+
+        #endregion
+
+        #region Guest Event Operations
+
+        public async Task<List<EventDetails>> GetAllUpcomingEvents()
+        {
+            var eventDetailsAccessor = new EventDetailsAccessor();
+            var events = await eventDetailsAccessor.GetAllUpcomingEvents();
+            return events;
         }
 
         public async Task ApplyForUpcomingEvent(EventApplicationRequest eventApplicationRequest)
@@ -164,20 +249,6 @@ namespace EncantoWebAPI.Managers
             return false;
         }
 
-        public async Task<List<EventDetails>> GetMyUpcomingHostedEvents(string hostId)
-        {
-            var eventDetailsAccessor = new EventDetailsAccessor();
-            var events = await eventDetailsAccessor.GetMyUpcomingHostedEvents(hostId);
-            return events;
-        }
-
-        public async Task<List<EventDetails>> GetMyPastHostedEvents(string hostId)
-        {
-            var eventDetailsAccessor = new EventDetailsAccessor();
-            var events = await eventDetailsAccessor.GetMyPastHostedEvents(hostId);
-            return events;
-        }
-
         public async Task<List<EventDetails>> GetMyRegisteredEvents(string guestId)
         {
             var eventDetailsAccessor = new EventDetailsAccessor();
@@ -192,70 +263,7 @@ namespace EncantoWebAPI.Managers
             return events;
         }
 
-        public async Task UpdateEventPendingRequest(string eventId, string participantId, bool isParticipantAccepted)
-        {
-            var eventDetailsAccessor = new EventDetailsAccessor();
-            await eventDetailsAccessor.UpdateEventPendingRequest(eventId, participantId, isParticipantAccepted);
-        }
+        #endregion
 
-        public async Task<List<PrivateEventRequestPreview>> GetAllPendingRequests(string hostId)
-        {
-            var currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-
-            var pendingRequests = new List<PrivateEventRequestPreview>();
-            var eventDetailsAccessor = new EventDetailsAccessor();
-            var events = await eventDetailsAccessor.GetMyUpcomingHostedEvents(hostId);
-
-            var upcomingEvents = events.Where(e => e.StartTimestamp > currentTimestamp);
-
-            foreach (var Event in upcomingEvents)
-            {
-                if (Event.Is_accepting_participants == true && Event.Participants != null)
-                {
-                    var pendingParticipantsInThisEvent = Event.Participants
-                        .Where(p => p.RegistrationStatus == 0);
-
-                    foreach (var participant in pendingParticipantsInThisEvent)
-                    {
-                        PrivateEventRequestPreview pendingRequest = new()
-                        {
-                            EventId = Event.EventId,
-                            EventName = Event.Title,
-                            StartTimestamp = Event.StartTimestamp,
-                            EndTimestamp = Event.EndTimestamp,
-                            ParticipantDetails = participant,
-                            ParticipantRequestTimestamp = participant.UpdatedTimestamp
-                        };
-
-                        pendingRequests.Add(pendingRequest);
-                    }
-                }
-            }
-
-            var sortedPendingRequests = pendingRequests
-                .OrderByDescending(r => r.ParticipantRequestTimestamp)
-                .ToList();
-
-            return sortedPendingRequests;
-        }
-
-        public async Task UpdateEventActiveStatus(string eventId, int eventStatus)
-        {
-            var eventDetailsAccessor = new EventDetailsAccessor();
-            var eventDetails = await eventDetailsAccessor.GetEventDetailsFromEventId(eventId);
-
-            if (eventDetails.Active == eventStatus)
-            {
-                throw new InvalidOperationException($"Event's Active Status is already {eventStatus}");
-            }
-
-            await eventDetailsAccessor.UpdateEventActiveStatus(eventId, eventStatus);
-        }
-
-        public async Task UpdateEventDetails(EditEventDetailsRequest editEventDetailsRequest)
-        {
-            var eventDetailsAccessor = new EventDetailsAccessor();
-            await eventDetailsAccessor.UpdateEventDetails(editEventDetailsRequest);
-        }
     }
 }

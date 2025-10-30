@@ -1,8 +1,6 @@
 ﻿using EncantoWebAPI.Accessors;
 using EncantoWebAPI.Models.Profiles;
 using EncantoWebAPI.Models.Profiles.Requests;
-using System.Text.Json;
-using System.Text.RegularExpressions;
 
 namespace EncantoWebAPI.Managers
 {

@@ -1,8 +1,5 @@
 ﻿using EncantoWebAPI.Models.Events;
 using EncantoWebAPI.Models.Events.Requests;
-using EncantoWebAPI.Models.Profiles;
-using EncantoWebAPI.Models.Profiles.Requests;
-using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
 
 namespace EncantoWebAPI.Accessors
@@ -16,54 +13,12 @@ namespace EncantoWebAPI.Accessors
             _db = new MongoDBAccessor();
         }
 
+        #region Host Event Operations
+
         public async Task CreateNewEvent(EventDetails newEvent, EventFeedback newEventFeedback)
         {
             await _db.Events.InsertOneAsync(newEvent);
             await _db.EventFeedbacks.InsertOneAsync(newEventFeedback);
-        }
-
-        public async Task<List<EventDetails>> GetAllUpcomingEvents()
-        {
-            var currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-
-            var filter = Builders<EventDetails>.Filter.And(
-                Builders<EventDetails>.Filter.Eq(e => e.Active, 1),
-                Builders<EventDetails>.Filter.Gt(e => e.StartTimestamp, currentTimestamp));
-
-            var activeEvents = await _db.Events
-                .Find(filter)
-                .ToListAsync();
-
-            return activeEvents;
-        }
-
-        public async Task<EventDetails> GetEventDetailsFromEventId(string eventId)
-        {
-            var filter = Builders<EventDetails>.Filter.Eq(u => u.EventId, eventId);
-            var eventDetails = await _db.Events.Find(filter).FirstOrDefaultAsync();
-            return eventDetails;
-        }
-
-        public async Task<EventFeedback> GetFeedbacksByEventId(string eventId)
-        {
-            var filter = Builders<EventFeedback>.Filter.Eq(e => e.EventId, eventId);
-            return await _db.EventFeedbacks.Find(filter).FirstOrDefaultAsync();
-        }
-
-        public async Task ApplyForUpcomingEvent(ParticipantDetails participantDetails, string eventId, int totalParticipantsCount)
-        {
-            var filter = Builders<EventDetails>.Filter.Eq(u => u.EventId, eventId);
-            var update = Builders<EventDetails>.Update
-                .Push(u => u.Participants, participantDetails) // append to list
-                .Set(u => u.TotalRegisteredParticipants, totalParticipantsCount)
-                .Set(u => u.UpdatedTimestamp, participantDetails.UpdatedTimestamp); // update timestamp
-
-            var result = await _db.Events.UpdateOneAsync(filter, update);
-
-            if (result.ModifiedCount == 0)
-            {
-                throw new Exception("Event not found or Participant Details not updated.");
-            }
         }
 
         public async Task<List<EventDetails>> GetMyUpcomingHostedEvents(string hostId)
@@ -92,53 +47,6 @@ namespace EncantoWebAPI.Accessors
             return activeEvents;
         }
 
-        public async Task<List<EventDetails>> GetMyCancelledHostedEvents(string hostId)
-        {
-            var filter = Builders<EventDetails>.Filter.And(
-                Builders<EventDetails>.Filter.Eq(e => e.Active, -1),
-                Builders<EventDetails>.Filter.Eq(e => e.OrganizerDetails.OrganizerId, hostId));
-
-            var activeEvents = await _db.Events
-                .Find(filter)
-                .ToListAsync();
-
-            return activeEvents;
-        }
-
-        public async Task<List<EventDetails>> GetMyRegisteredEvents(string guestId)
-        {
-            var currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-
-            var filter = Builders<EventDetails>.Filter.And(
-                Builders<EventDetails>.Filter.In(e => e.Active, [1, -1]),
-                Builders<EventDetails>.Filter.Gt(e => e.EndTimestamp, currentTimestamp),
-                Builders<EventDetails>.Filter.ElemMatch(e => e.Participants, p => p.ParticipantId == guestId));
-                // Use ElemMatch to query inside the Participants list
-
-            var events = await _db.Events
-                .Find(filter)
-                .ToListAsync();
-
-            return events;
-        }
-
-        public async Task<List<EventDetails>> GetMyPastAttendedEvents(string guestId)
-        {
-            var currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-
-            var filter = Builders<EventDetails>.Filter.And(
-                Builders<EventDetails>.Filter.In(e => e.Active, [0, 1]),// Use "In" for multiple values
-                Builders<EventDetails>.Filter.Lt(e => e.EndTimestamp, currentTimestamp),
-                Builders<EventDetails>.Filter.ElemMatch(e => e.Participants, p => p.ParticipantId == guestId),
-                Builders<EventDetails>.Filter.ElemMatch(e => e.Participants, p => p.RegistrationStatus == 1));// Use ElemMatch to query inside the Participants list
-
-            var events = await _db.Events
-                .Find(filter)
-                .ToListAsync();
-
-            return events;
-        }
-
         public async Task UpdateEventPendingRequest(string eventId, string participantId, bool isParticipantAccepted)
         {
             var currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
@@ -159,6 +67,13 @@ namespace EncantoWebAPI.Accessors
                 .Set(e => e.UpdatedTimestamp, currentTimestamp);
 
             var result = await _db.Events.UpdateOneAsync(filter, update);
+        }
+
+        public async Task<EventDetails> GetEventDetailsFromEventId(string eventId)
+        {
+            var filter = Builders<EventDetails>.Filter.Eq(u => u.EventId, eventId);
+            var eventDetails = await _db.Events.Find(filter).FirstOrDefaultAsync();
+            return eventDetails;
         }
 
         public async Task UpdateEventActiveStatus(string eventId, int eventStatus)
@@ -200,5 +115,95 @@ namespace EncantoWebAPI.Accessors
                 throw new Exception("Event not found or Event Details not updated.");
             }
         }
+
+        public async Task<List<EventDetails>> GetMyCancelledHostedEvents(string hostId)
+        {
+            var filter = Builders<EventDetails>.Filter.And(
+                Builders<EventDetails>.Filter.Eq(e => e.Active, -1),
+                Builders<EventDetails>.Filter.Eq(e => e.OrganizerDetails.OrganizerId, hostId));
+
+            var activeEvents = await _db.Events
+                .Find(filter)
+                .ToListAsync();
+
+            return activeEvents;
+        }
+        public async Task<EventFeedback> GetFeedbacksByEventId(string eventId)
+        {
+            var filter = Builders<EventFeedback>.Filter.Eq(e => e.EventId, eventId);
+            return await _db.EventFeedbacks.Find(filter).FirstOrDefaultAsync();
+        }
+
+        #endregion
+
+        #region Guest Event Operations
+
+        public async Task<List<EventDetails>> GetAllUpcomingEvents()
+        {
+            var currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
+            var filter = Builders<EventDetails>.Filter.And(
+                Builders<EventDetails>.Filter.Eq(e => e.Active, 1),
+                Builders<EventDetails>.Filter.Gt(e => e.StartTimestamp, currentTimestamp));
+
+            var activeEvents = await _db.Events
+                .Find(filter)
+                .ToListAsync();
+
+            return activeEvents;
+        }
+
+        public async Task ApplyForUpcomingEvent(ParticipantDetails participantDetails, string eventId, int totalParticipantsCount)
+        {
+            var filter = Builders<EventDetails>.Filter.Eq(u => u.EventId, eventId);
+            var update = Builders<EventDetails>.Update
+                .Push(u => u.Participants, participantDetails) // append to list
+                .Set(u => u.TotalRegisteredParticipants, totalParticipantsCount)
+                .Set(u => u.UpdatedTimestamp, participantDetails.UpdatedTimestamp); // update timestamp
+
+            var result = await _db.Events.UpdateOneAsync(filter, update);
+
+            if (result.ModifiedCount == 0)
+            {
+                throw new Exception("Event not found or Participant Details not updated.");
+            }
+        }
+
+        public async Task<List<EventDetails>> GetMyRegisteredEvents(string guestId)
+        {
+            var currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
+            var filter = Builders<EventDetails>.Filter.And(
+                Builders<EventDetails>.Filter.In(e => e.Active, [1, -1]),
+                Builders<EventDetails>.Filter.Gt(e => e.EndTimestamp, currentTimestamp),
+                Builders<EventDetails>.Filter.ElemMatch(e => e.Participants, p => p.ParticipantId == guestId));
+                // Use ElemMatch to query inside the Participants list
+
+            var events = await _db.Events
+                .Find(filter)
+                .ToListAsync();
+
+            return events;
+        }
+
+        public async Task<List<EventDetails>> GetMyPastAttendedEvents(string guestId)
+        {
+            var currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
+            var filter = Builders<EventDetails>.Filter.And(
+                Builders<EventDetails>.Filter.In(e => e.Active, [0, 1]),// Use "In" for multiple values
+                Builders<EventDetails>.Filter.Lt(e => e.EndTimestamp, currentTimestamp),
+                Builders<EventDetails>.Filter.ElemMatch(e => e.Participants, p => p.ParticipantId == guestId),
+                Builders<EventDetails>.Filter.ElemMatch(e => e.Participants, p => p.RegistrationStatus == 1));// Use ElemMatch to query inside the Participants list
+
+            var events = await _db.Events
+                .Find(filter)
+                .ToListAsync();
+
+            return events;
+        }
+
+        #endregion
+
     }
 }
