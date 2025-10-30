@@ -20,7 +20,7 @@ namespace EncantoWebAPI.Accessors
                          Builders<LoginCredential>.Filter.Eq(x => x.PasswordHash, loginRequest.PasswordHash);
 
             var credential = await _db.LoginCredentials.Find(filter).FirstOrDefaultAsync();
-            return credential?.UserId;
+            return credential.UserId;
         }
 
         public async Task StoreSessionKey(SessionDetails sessionDetails)
