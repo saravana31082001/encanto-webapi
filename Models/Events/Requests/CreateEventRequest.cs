@@ -6,6 +6,7 @@
         public required string Description { get; set; }
         public required string OrganizerId { get; set; } // UserId of Host
         public string? MeetingLink { get; set; }
+        public string? EventImageBitCode { get; set; }
         public required bool EnableRating { get; set; }
         public required bool EnableComments { get; set; }        
         public required long StartTimestamp { get; set; }

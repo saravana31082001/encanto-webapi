@@ -58,6 +58,7 @@ namespace EncantoWebAPI.Managers
                 Description = newEventRequest.Description,
                 OrganizerDetails = organizerDetails,
                 MeetingLink = newEventRequest.MeetingLink,
+                EventImageBitCode = newEventRequest.EventImageBitCode,
                 StartTimestamp = newEventRequest.StartTimestamp,
                 EndTimestamp = newEventRequest.EndTimestamp,
                 CreatedTimestamp = newEventRequest.CreatedTimestamp,
