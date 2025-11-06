@@ -13,6 +13,7 @@ namespace EncantoWebAPI.Models.Events
         public required string Description { get; set; }
         public List<string>? Tags { get; set; }
         public string? MeetingLink { get; set; }
+        public string? EventImageBitCode { get; set; }
         public EventFeedback? EventFeedback { get; set; }
         public required OrganizerDetails OrganizerDetails { get; set; }
         public required long StartTimestamp { get; set; }
