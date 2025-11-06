@@ -4,7 +4,7 @@
     {
         public required string Title { get; set; }
         public required string Description { get; set; }
-        public required string OrganizerId { get; set; } // UserId of Host
+        public required string OrganizerId { get; set; } // User Id of Host
         public string? MeetingLink { get; set; }
         public string? EventImageBitCode { get; set; }
         public required bool EnableRating { get; set; }
